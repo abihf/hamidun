@@ -1,19 +1,46 @@
 version: '2'
 
 services:
+  nginxconf:
+    image: "tianon/true"
+    network_mode: none
+    volumes:
+    - /etc/nginx/conf.d
+    
   hamidun:
     image: abihf/hamidun
     restart: always
+    network_mode: none
     volumes:
     - /var/run/docker.sock:/var/run/docker.sock
-    - ./templates:/etc/nginx/templates/
-    - ./ssl:/etc/nginx/ssl
+    - ./templates:/templates
+    volumes_from:
+    - nginxconf
+    environment:
+    - DOCKER_HOST=unix://var/run/docker.sock
+    - TEMPLATES_DIR=/templates
+    - DOCKER_NETWORK_NAME=load_balancer
+    - OUTPUT_DIR=/etc/nginx/conf.d
+    depends_on:
+    - nginx
+
+  nginx:
+    image: nginx:alpine
+    restart: always
     ports:
     - 80:80
     - 443:443
+    labels:
+    - org.hamidun.type=loadbalancer
     networks:
     - load_balancer
+    volumes:
+    - ./ssl:/etc/nginx/ssl
+    volumes_from:
+    - nginxconf
+        
 
 networks:
   load_balancer:
     external: true
+    
