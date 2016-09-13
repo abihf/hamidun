@@ -1,0 +1,19 @@
+version: '2'
+
+services:
+  hamidun:
+    image: abihf/hamidun
+    restart: always
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - ./templates:/etc/nginx/templates/
+    - ./ssl:/etc/nginx/ssl
+    ports:
+    - 80:80
+    - 443:443
+    networks:
+    - load_balancer
+
+networks:
+  load_balancer:
+    external: true
