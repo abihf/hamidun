@@ -1,14 +1,26 @@
 #!/usr/bin/env python
+"""
+Hamidun is stupid and ugly load balancer for docker based services.
+
+Please read README.md
+"""
 
 import os
 import re
 import time
-
 from os import listdir, environ
 from os.path import isfile, join
 from threading import Thread
-
 from docker import Client as DockerClient
+
+
+__author__ = "Abi Hafshin"
+__copyright__ = "Copyright 2016 Abi Hafshin"
+__license__ = "MIT"
+__version__ = "0.1.0"
+__maintainer__ = "Abi Hafshin"
+__email__ = "abi@hafs.in"
+__status__ = "Development"
 
 
 LABEL_UPSTREAM_NAME = 'org.hamidun.name'
@@ -50,6 +62,7 @@ def main():
   # finish
 
 def get_env(name, default):
+  """return environment variable named name, if it does not exist, return default"""
   if name in environ:
     return environ[name]
   else:
