@@ -120,7 +120,7 @@ class Hamidun:
     if not self.network.name in info['NetworkSettings']['Networks']:
       if limit == 0:
         raise Exception('invalid network setting for %s', cid[:8])
-      docker.connect_container_to_network(cid, self.network.id)
+      self.docker.connect_container_to_network(cid, self.network.id)
       time.sleep(0.5)
       return self.process_container(cid, limit - 1)
 
@@ -149,7 +149,7 @@ class Hamidun:
     containers = self.docker.containers(filters={'label': 'org.hamidun.type=loadbalancer'})
     for container in containers:
       executable = self.docker.exec_create(container['Id'], 'nginx -s reload')
-      self.docker.exec_start(executable['Id'], true)
+      self.docker.exec_start(executable['Id'], True)
 
 
 class ConfigurationWriter:
